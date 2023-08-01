@@ -1,0 +1,11 @@
+[server]
+
+runOnSave = true
+
+[browser]
+
+serverAddress = "localhost"
+
+[theme]
+
+base = "dark"
