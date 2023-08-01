@@ -1,1 +1,1 @@
-# anonymizer-hackathon-video-surveillance
+# Anonymizer Hackathon - Video Surveillance Anonymization
