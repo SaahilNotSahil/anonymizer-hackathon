@@ -1,7 +1,8 @@
 import cv2
 import streamlit as st
 
-from utils import bilateral_face, mp_drawing, mp_face_mesh, pixelate_face
+from utils import (bilateral_face, get_cam, mp_drawing, mp_face_mesh,
+                   pixelate_face)
 
 st.set_page_config(
     page_title="Anonymizer for Video Surveillance", layout="centered"
@@ -17,17 +18,49 @@ st.write(
 
 FRAME_WINDOW = st.image([])
 
-cap = cv2.VideoCapture(1)
+cap = get_cam()
 
 blur_mode = st.selectbox(
     'Select blur mode:',
     ('gaussian', 'pixelate', 'bilateral', 'none'),
-    on_change=cap.release
+    key="tab1"
+    # on_change=cap.release
 )
 
-draw_landmark = st.button('Draw landmark', on_click=cap.release)
-hide_landmark = st.button('hide landmark', on_click=cap.release)
-quit = st.button("Quit", on_click=cap.release)
+landmark = False
+
+# def handle_draw_landmark():
+#     global landmark
+
+#     landmark = True
+
+
+# def handle_hide_landmark():
+#     global landmark
+
+#     landmark = False
+
+
+draw_landmark = st.button(
+    'Draw landmark',
+    key="tab2"
+    # on_click=handle_draw_landmark
+)
+
+# hide_landmark = st.button(
+#     'Hide landmark',
+#     # on_click=handle_hide_landmark
+# )
+
+if draw_landmark:
+    landmark = not landmark
+    draw_landmark = False
+
+quit = st.button(
+    "Quit",
+    key="tab3"
+    # on_click=cap.release
+)
 
 with mp_face_mesh.FaceMesh(
     min_detection_confidence=0.5,
@@ -41,6 +74,7 @@ with mp_face_mesh.FaceMesh(
 
         # Convert the image to RGB
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # rgb = frame
 
         # Process the image with the Face Mesh model
         results = face_mesh.process(rgb)
@@ -48,7 +82,7 @@ with mp_face_mesh.FaceMesh(
         # Draw the face landmarks and blur the faces on the image
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-                if draw_landmark:
+                if landmark:
                     mp_drawing.draw_landmarks(
                         image=frame,
                         landmark_list=face_landmarks,
@@ -120,9 +154,12 @@ with mp_face_mesh.FaceMesh(
 
         FRAME_WINDOW.image(frame)
 
-        if hide_landmark:
-            draw_landmark = False
-        elif quit:
-            break
+        # if draw_landmark:
+        #     landmark = True
+        #     hide_landmark = False
+        # elif hide_landmark:
+        #     landmark = False
+        #     draw_landmark = False
 
-cap.release()
+        if quit:
+            break
