@@ -1,5 +1,4 @@
 import streamlit as st
-
 from utils.streamlit_utils import handle_files, handle_submit
 
 st.set_page_config(

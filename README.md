@@ -1,1 +1,2 @@
-# Anonymizer Hackathon - Video Surveillance Anonymization
+# Anonymizer Hackathon
+Spreadsheet and Video Surveillance Anonymization

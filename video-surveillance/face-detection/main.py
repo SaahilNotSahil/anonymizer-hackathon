@@ -1,6 +1,5 @@
 import cv2
 import streamlit as st
-
 from utils import (bilateral_face, get_cam, mp_drawing, mp_face_mesh,
                    pixelate_face)
 
@@ -24,33 +23,14 @@ blur_mode = st.selectbox(
     'Select blur mode:',
     ('gaussian', 'pixelate', 'bilateral', 'none'),
     key="tab1"
-    # on_change=cap.release
 )
 
 landmark = False
 
-# def handle_draw_landmark():
-#     global landmark
-
-#     landmark = True
-
-
-# def handle_hide_landmark():
-#     global landmark
-
-#     landmark = False
-
-
 draw_landmark = st.button(
     'Draw landmark',
     key="tab2"
-    # on_click=handle_draw_landmark
 )
-
-# hide_landmark = st.button(
-#     'Hide landmark',
-#     # on_click=handle_hide_landmark
-# )
 
 if draw_landmark:
     landmark = not landmark
@@ -59,7 +39,6 @@ if draw_landmark:
 quit = st.button(
     "Quit",
     key="tab3"
-    # on_click=cap.release
 )
 
 with mp_face_mesh.FaceMesh(
@@ -74,7 +53,6 @@ with mp_face_mesh.FaceMesh(
 
         # Convert the image to RGB
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # rgb = frame
 
         # Process the image with the Face Mesh model
         results = face_mesh.process(rgb)
@@ -97,15 +75,32 @@ with mp_face_mesh.FaceMesh(
                 else:
                     pass
 
-                # Get the bounding box coordinates of the face from the landmarks
+                # Get the bounding box coordinates of the face from the
+                # landmarks
                 x = int(
-                    min([landmark.x for landmark in face_landmarks.landmark]) * frame.shape[1])
+                    min(
+                        [landmark.x for landmark in face_landmarks.landmark]
+                    )*frame.shape[1]
+                )
                 y = int(
-                    min([landmark.y for landmark in face_landmarks.landmark]) * frame.shape[0])
-                w = int((max([landmark.x for landmark in face_landmarks.landmark]) - min(
-                    [landmark.x for landmark in face_landmarks.landmark])) * frame.shape[1])
-                h = int((max([landmark.y for landmark in face_landmarks.landmark]) - min(
-                    [landmark.y for landmark in face_landmarks.landmark])) * frame.shape[0])
+                    min(
+                        [landmark.y for landmark in face_landmarks.landmark]
+                    )*frame.shape[0]
+                )
+                w = int(
+                    (max(
+                        [landmark.x for landmark in face_landmarks.landmark]
+                    ) - min(
+                        [landmark.x for landmark in face_landmarks.landmark]
+                    ))*frame.shape[1]
+                )
+                h = int(
+                    (max(
+                        [landmark.y for landmark in face_landmarks.landmark]
+                    ) - min(
+                        [landmark.y for landmark in face_landmarks.landmark]
+                    ))*frame.shape[0]
+                )
 
                 # Blur the face according to the current blur mode
                 if blur_mode == "gaussian":
@@ -153,13 +148,6 @@ with mp_face_mesh.FaceMesh(
         )
 
         FRAME_WINDOW.image(frame)
-
-        # if draw_landmark:
-        #     landmark = True
-        #     hide_landmark = False
-        # elif hide_landmark:
-        #     landmark = False
-        #     draw_landmark = False
 
         if quit:
             break

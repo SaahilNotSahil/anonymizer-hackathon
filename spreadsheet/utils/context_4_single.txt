@@ -1,0 +1,31 @@
+Answer as succinctly as possible:
+
+You are given with a tag, followed by 5 values that tag can obtain. For each tag, tell whether it is numerical or non-numerical. 
+Further, if it is non-numerical, assign it one out of these categories given below:
+
+1. name
+2. last_name
+3. first_name
+4. email
+5. phone_number
+6. zip code
+7. street
+8. street_address
+9. city
+10. None
+
+If it is numerical then assign it the "None" category.
+Give me a .json output.
+
+For example, given this input tag:
+
+Age: [12, 16, 80, 23, 43]
+
+The response should be:
+
+{
+    "Age": {
+        "numerical": "Yes",
+	"category": "None"
+    }
+}
